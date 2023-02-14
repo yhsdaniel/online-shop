@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { getUser } from '../services/api';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 const LoginForm = () => {
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
-    const {token} = useSelector(state => state.user)
     
     const dispatch = useDispatch()
     const navigate = useNavigate()
@@ -14,7 +13,7 @@ const LoginForm = () => {
     const handleSubmit = () => {
         sessionStorage.setItem('user', username)
         dispatch(getUser({username, password}))
-        navigate('/')
+        navigate('/online-shop')
     }
 
     return (

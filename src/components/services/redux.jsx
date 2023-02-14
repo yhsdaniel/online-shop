@@ -1,8 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { getAllCategory, getUser, getAllProduct, getPerCategory, getDetailProduct, getNameUser } from './api';
 
-const initialState = []
-
 export const LoginUser = createSlice({
     name: 'user',
     initialState: {
@@ -89,12 +87,10 @@ export const perCategory = createSlice({
 export const detailProduct = createSlice({
     name: 'detailProduct',
     initialState: {
-        isLoading: false,
-        detailProduct: []
+        detailProduct: [],
     },
     extraReducers: {
         [getDetailProduct.fulfilled]: (state, action) => {
-            state.isLoading = true
             state.detailProduct = action.payload
         }
     },
@@ -102,53 +98,45 @@ export const detailProduct = createSlice({
 
 export const cartSlice = createSlice({
     name: "cart",
-    initialState,
+    initialState: {
+        cart: [],
+    },
     reducers: {
-        addToCart(state, { payload }) {
-            const { id } = payload
-            const find = state.find((item) => item.id === id)
-            if (find) {
-                return state.map((item) =>
-                    item.id === id ? {
-                        ...item,
-                        quantity: item.quantity + 1
-                    }
-                        : item
-                )
+        addToCart: (state, action) => {
+            const itemInCart = state.cart.find((item) => item.id === action.payload);
+            if (itemInCart) {
+                itemInCart.quantity += action.payload.quantity
             } else {
-                state.push({
-                    ...payload,
+                state.cart.push({ 
+                    ...action.payload,
                     quantity: 1
-                })
+                });
             }
         },
-        increment(state, { payload }) {
-            return state.map((item) =>
-                item.id === payload ? {
-                    ...item,
-                    quantity: item.quantity + 1
+        incrementQuantity: (state, action) => {
+            state.cart.map((item) => {
+                if(item.product.id === action.payload) {
+                    item.quantity++
                 }
-                    : item
-            )
+            })
         },
-        decrement(state, { payload }) {
-            return state.map((item) =>
-                item.id === payload ? {
-                    ...item,
-                    quantity: item.quantity > 0 ? item.quantity - 1 : 0
+        decrementQuantity: (state, action) => {
+            state.cart.map((item) => {
+                if(item.product.id === action.payload) {
+                    if(item.quantity <= 0) {
+                        item.quantity = 0
+                    } else {
+                        item.quantity--
+                    }
                 }
-                    : item
-            )
+            })
         },
-        deleteItem(state, { payload }) {
-            const itemId = payload
-            state = state.filter((item) => item.id !== itemId)
+        removeItem: (state, action) => {
+            const removeItem = state.cart.filter((item) => item.product.id !== action.payload);
+            state.cart = removeItem;
         },
-        clear(state) {
-            return []
-        }
     }
 })
 
-export const { addToCart, increment, decrement, deleteItem } = cartSlice.actions
+export const { addToCart, incrementQuantity, decrementQuantity, removeItem } = cartSlice.actions
 export const { logout } = LoginUser.actions

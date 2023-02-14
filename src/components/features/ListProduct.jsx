@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllProduct, getDetailProduct } from '../services/api';
 import Category from './Category';
@@ -12,15 +12,14 @@ const ListProduct = () => {
 
     const navigate = useNavigate()
     const dispatch = useDispatch()
-    
+
     useEffect(() => {
         dispatch(getAllProduct())
     }, [])
-    
 
     const handleGoToDetailProduct = (e) => {
         dispatch(getDetailProduct(e))
-        navigate('/DetailProduct')
+        navigate('detail-product')
     }
 
     return (
@@ -36,7 +35,7 @@ const ListProduct = () => {
                                     <div className='flex justify-center items-center w-full h-full bg-white'>
                                         <img src={val.image} alt="Sample Image" className='w-6/12 h-auto' />
                                     </div>
-                                    <div className='w-full py-2 flex justify-center items-center flex-col'>
+                                    <div className='w-full py-2 px-2 flex justify-center items-center flex-col'>
                                         <div className='content pt-2 w-full flex justify-center items-center '>
                                             <span className='text-sm font-bold text-center ellipsis'>{val.title}</span>
                                         </div>
@@ -57,7 +56,7 @@ const ListProduct = () => {
                                     <div className='flex justify-center items-center w-full h-full bg-white'>
                                         <img src={val.image} alt="Sample Image" className='w-6/12 h-auto' />
                                     </div>
-                                    <div className='w-full py-2 flex justify-center items-center flex-col'>
+                                    <div className='w-full py-2 px-2 flex justify-center items-center flex-col'>
                                         <div className='content pt-2 w-full flex justify-center items-center'>
                                             <span className='text-sm font-bold text-left ellipsis'>{val.title}</span>
                                         </div>

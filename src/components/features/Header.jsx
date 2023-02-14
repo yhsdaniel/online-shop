@@ -5,26 +5,27 @@ import { faShoppingCart } from '@fortawesome/free-solid-svg-icons'
 import { logout } from '../services/redux';
 import logo from '../img/logo.png'
 import { Link, useNavigate } from 'react-router-dom';
-import { getNameUser } from '../services/api';
+import { getDetailProduct, getNameUser } from '../services/api';
 
 const Header = () => {
-    const { dataUser } = useSelector(state => state.nameUser)
-    const initialUser = sessionStorage.getItem('user')
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+
     const getToken = () => {
         const tokenString = sessionStorage.getItem('token');
         const userToken = JSON.parse(tokenString);
         return userToken
     }
 
-    let nickName = []
-    let idUser = []
-
     useEffect(() => {
         dispatch(getNameUser())
     }, [])
 
-
     //get id and first name
+    const { dataUser } = useSelector(state => state.nameUser)
+    const initialUser = sessionStorage.getItem('user')
+    let nickName = []
+    let idUser = []
     for (let i = 0; i < dataUser.length; i++) {
         if (dataUser[i].username === initialUser) {
             const nick = dataUser[i].name.firstname
@@ -34,16 +35,19 @@ const Header = () => {
         }
     }
 
-    const dispatch = useDispatch()
-    const navigate = useNavigate()
+    //get cart quantity
+    const cart = useSelector((state) => state.cart.cart)
+    const getTotalQuantity = () => {
+        let total = 0
+        total += cart.length
+        return total
+    }
 
     const linkToHome = () => {
+        getDetailProduct(null)
         navigate('/')
     }
-    const linkToCart = () => {
-        localStorage.setItem('id user', idUser)
-        navigate('/Cart')
-    }
+
     return (
         <header className='w-full h-20 flex items-center justify-center' style={{ background: "#ded7cf" }}>
             <div className="flex justify-center items-center w-2/12 hover:cursor-pointer mix-blend-multiply" onClick={linkToHome}><img src={logo} alt="Sample Logo" className='w-20' /></div>
@@ -57,7 +61,16 @@ const Header = () => {
                     <input className="placeholder:italic placeholder:text-slate-400 block text-black bg-white w-full border border-slate-300 rounded-2xl py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-gray-500 focus:ring-gray-500 focus:ring-1 sm:text-sm" placeholder="Search for anything..." type="text" name="search" />
                 </label>
             </div>
-            <div className='w-1/12 flex justify-center items-center hover:cursor-pointer hover:text-gray-700 ease-in-out duration-150 text-2xl' onClick={linkToCart}><FontAwesomeIcon icon={faShoppingCart} /></div>
+            <div className='w-1/12 flex justify-center items-center hover:cursor-pointer hover:text-gray-700 ease-in-out duration-150 text-2xl' onClick={() => navigate('/Cart')}>
+                <FontAwesomeIcon icon={faShoppingCart} />
+                {!getTotalQuantity() ?
+                    <div></div>
+                    : 
+                    <div className='rounded-full w-5 h-5 relative bg-red-500 -top-2.5 right-2.5'>
+                        <span className='text-sm absolute text-center text-white w-full top-0'>{getTotalQuantity()}</span>
+                    </div>
+                }
+            </div>
             <div className='w-1/12 italic'><span>{nickName[0]}</span></div>
             <div className="flex justify-start items-center w-1/12">
                 {getToken() ?

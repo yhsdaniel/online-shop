@@ -9,14 +9,15 @@ const persistConfig = {
   storage,
 }
 
-const rootReducer = combineReducers({ 
+const rootReducer = combineReducers({
   user: persistReducer(persistConfig, LoginUser.reducer),
   detailProduct: persistReducer(persistConfig, detailProduct.reducer),
+  cart: persistReducer(persistConfig, cartSlice.reducer),
   nameUser: NameUser.reducer,
   category: Category.reducer,
   product: AllProduct.reducer,
   perCategory: perCategory.reducer,
-  cart: persistReducer(persistConfig, cartSlice.reducer),
+  // count: counterSlice.reducer,
 })
 
 // const persistedReducer = persistReducer(persistConfig, rootReducer.user)

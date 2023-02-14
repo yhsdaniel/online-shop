@@ -1,20 +1,18 @@
 import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import {Home} from './components/container/ListAllProduct';
+import {Home} from './components/container/Home';
 import LoginForm from './components/features/LoginForm';
-// import ListDetailProduct from './components/container/ListDetailProduct';
 import ListCart from './components/container/ListCart';
 import DetailProduct from './components/features/DetailProduct';
 
 function App() {
-
   return (
-    <div className="App font-mono">
+    <div className="App font-mono h-full">
       <Router>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="Login" element={<LoginForm />} />
-          <Route path='DetailProduct' element={<DetailProduct />} />
+          <Route path={`detail-product`} element={<DetailProduct />} />
           <Route path='Cart' element={<ListCart />} />
         </Routes>
       </Router>

@@ -1,9 +1,7 @@
-import React, { createContext, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { getAllCategory, getPerCategory } from '../services/api';
 import { useDispatch, useSelector } from 'react-redux';
 import { Grid } from '@mui/material';
-
-export const CategoryContext = createContext()
 
 const Category = () => {
     const { data } = useSelector(state => state.category)
